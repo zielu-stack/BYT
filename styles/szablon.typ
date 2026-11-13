@@ -75,29 +75,24 @@
   #text(size: 0.92em, tresc)
 ]
 
-// Wymaganie: w jednej linii identyfikator, nazwa i priorytet, pod spodem opis.
-#let wymaganie(id, nazwa, priorytet: "Średni", tresc) = block(
-  width: 100%,
-  stroke: (left: 2.5pt + granat.lighten(40%), rest: 0.5pt + linia),
-  inset: 10pt,
-  above: 1em,
-  below: 1em,
-  breakable: false,
-)[
-  #grid(
-    columns: (auto, 1fr, auto),
-    column-gutter: 8pt,
-    align: horizon,
-    plakietka(id),
-    text(font: sans, weight: "semibold", size: 10pt, nazwa),
-    text(font: sans, size: 8pt, fill: szary, priorytet),
-  )
-  #v(0.25em)
-  #text(size: 10pt, tresc)
-]
+// --- 4. Diagramy i tabela wymagań ------------------------------------------
 
-
-// --- 4. Diagramy -----------------------------------------------------------
+// Tabela wymagań. Podajesz podpis i listę wymagań, numery wstawiają się same
+// — dopisanie wymagania w środku nie zmusza do przenumerowania reszty.
+//
+//   #tabela-wymagan("Wymagania funkcjonalne", (
+//     [Użytkownik loguje się loginem i hasłem.],
+//     [Użytkownik wylogowuje się z systemu.],
+//   ))
+#let tabela-wymagan(podpis, wymagania) = figure(
+  table(
+    columns: (auto, 1fr),
+    align: (center + horizon, left),
+    table.header([Lp.], [Wymaganie]),
+    ..wymagania.enumerate(start: 1).map(((nr, tresc)) => ([#nr], tresc)).flatten()
+  ),
+  caption: podpis,
+)
 
 // Diagram UML. Własny `kind` sprawia, że diagramy mają osobną numerację
 // i osobny spis — nie mieszają się ze zwykłymi obrazkami.
@@ -127,7 +122,7 @@
 
 #let spis-tresci() = outline(title: [Spis treści], depth: 3)
 #let spis-diagramow() = outline(title: [Spis diagramów], target: figure.where(kind: "diagram"))
-
+#let spis-tabel() = outline(title: [Spis tabel], target: figure.where(kind: table))
 
 // --- 6. Strona tytułowa i reguły całego dokumentu --------------------------
 
